@@ -1,4 +1,4 @@
-# ENUME 2025 – Numerical Methods Assignments
+ Numerical Methods Assignments
 
 A collection of three MATLAB assignments for the ENUME 2025 numerical methods course.  Each folder contains the original brief, the submitted report, and well-documented MATLAB code that can be executed directly to reproduce the results and figures discussed in the reports.
 
