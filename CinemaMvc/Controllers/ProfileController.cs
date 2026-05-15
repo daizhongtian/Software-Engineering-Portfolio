@@ -1,19 +1,21 @@
-
-
+using CinemaMvc.Data;
 using CinemaMvc.Models;
 using CinemaMvc.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CinemaMvc.Controllers
 {
     [Authorize]
     public class profileController : Controller
     {
+        private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        public profileController(UserManager<ApplicationUser> userManager)
+        public profileController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
+            _context = context;
             _userManager = userManager;
         }
 
@@ -44,37 +46,48 @@ namespace CinemaMvc.Controllers
             {
                 return View(vm);
             }
-            var user = await _userManager.GetUserAsync(User);
+            var userId = _userManager.GetUserId(User);
+            if (userId == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             if(user ==null)
             {
                 return NotFound();
             }
-            if(user.ConcurrencyStamp!=vm.ConcurrencyStamp)
-            {
-                vm.ConcurrencyStamp = user.ConcurrencyStamp ?? string.Empty;
-                ModelState.AddModelError("","User data changed. Reload page and try again");
-                return View(vm);
-            }
-            
 
             user.FirstName = vm.FirstName;
             user.LastName = vm.LastName;
             user.PhoneNumber = vm.PhoneNumber;
+            _context.Entry(user)
+                .Property(u => u.ConcurrencyStamp)
+                .OriginalValue = vm.ConcurrencyStamp;
+            user.ConcurrencyStamp = Guid.NewGuid().ToString();
 
-            var result = await _userManager.UpdateAsync(user);
-
-            if(result.Succeeded)
+            try
             {
+                await _context.SaveChangesAsync();
                 TempData["Message"]="Profile updated successfully";
                 return RedirectToAction(nameof(Edit));
-
             }
-            foreach(var error in result.Errors)
+            catch (DbUpdateConcurrencyException)
             {
-                    ModelState.AddModelError("", error.Description);
+                var databaseUser = await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == userId);
+                if (databaseUser == null)
+                {
+                    return NotFound();
+                }
+
+                vm.FirstName = databaseUser.FirstName;
+                vm.LastName = databaseUser.LastName;
+                vm.PhoneNumber = databaseUser.PhoneNumber;
+                vm.ConcurrencyStamp = databaseUser.ConcurrencyStamp ?? string.Empty;
+                ModelState.Clear();
+                ModelState.AddModelError("", "User data changed. Reload page and try again");
+                return View(vm);
             }
-            vm.ConcurrencyStamp = user.ConcurrencyStamp ?? string.Empty;
-             return View(vm);
         }
         
 
