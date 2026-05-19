@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Screenings from "./pages/Screenings";
 import ProfileEdit from "./pages/ProfileEdit";
 import AdminUsers from "./pages/AdminUsers";
@@ -17,21 +17,9 @@ export default function App() {
   const [authVersion, setAuthVersion] = useState(0);
 
   const isAdmin = currentUser.roles?.includes("Admin");
+  const visiblePage = page === "users" && !isAdmin ? "screenings" : page;
 
-  useEffect(() => {
-    refreshCurrentUser();
-
-    window.addEventListener("focus", refreshCurrentUser);
-    return () => window.removeEventListener("focus", refreshCurrentUser);
-  }, []);
-
-  useEffect(() => {
-    if (page === "users" && !isAdmin) {
-      setPage("screenings");
-    }
-  }, [isAdmin, page]);
-
-  async function refreshCurrentUser() {
+  const refreshCurrentUser = useCallback(async () => {
     try {
       const data = await getJson("/api/account/me");
       setCurrentUser(data);
@@ -44,7 +32,17 @@ export default function App() {
     } finally {
       setAuthVersion((current) => current + 1);
     }
-  }
+  }, []);
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(refreshCurrentUser, 0);
+
+    window.addEventListener("focus", refreshCurrentUser);
+    return () => {
+      window.clearTimeout(timeoutId);
+      window.removeEventListener("focus", refreshCurrentUser);
+    };
+  }, [refreshCurrentUser]);
 
   return (
     <>
@@ -111,10 +109,10 @@ export default function App() {
         </div>
       </nav>
 
-      {page === "screenings" && <Screenings key={`screenings-${authVersion}`} />}
-      {page === "profile" && <ProfileEdit key={`profile-${authVersion}`} />}
-      {page === "users" && isAdmin && <AdminUsers key={`users-${authVersion}`} />}
-      {page === "register" && <Register />}
+      {visiblePage === "screenings" && <Screenings key={`screenings-${authVersion}`} />}
+      {visiblePage === "profile" && <ProfileEdit key={`profile-${authVersion}`} />}
+      {visiblePage === "users" && isAdmin && <AdminUsers key={`users-${authVersion}`} />}
+      {visiblePage === "register" && <Register />}
     </>
   );
 }

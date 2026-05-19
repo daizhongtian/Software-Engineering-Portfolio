@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getJson, sendJson } from "../api/client";
 
 export default function Screenings() {
@@ -17,11 +17,7 @@ export default function Screenings() {
 
   const isAdmin = currentUser?.roles?.includes("Admin");
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  async function loadData() {
+  const loadData = useCallback(async () => {
     try {
       setError("");
 
@@ -46,7 +42,12 @@ export default function Screenings() {
     } finally {
       setIsLoading(false);
     }
-  }
+  }, []);
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(loadData, 0);
+    return () => window.clearTimeout(timeoutId);
+  }, [loadData]);
 
   function updateForm(event) {
     const { name, value } = event.target;
