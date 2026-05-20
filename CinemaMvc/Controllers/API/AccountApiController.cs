@@ -121,4 +121,12 @@ public class AccountApiController : ControllerBase
             Roles = roles.ToArray()
         };
     }
+
+    [HttpPost("logout")]
+    [Authorize]
+    public async Task<IActionResult> Logout()
+    {
+        await _signInManager.SignOutAsync();
+        return NoContent();
+    }
 }

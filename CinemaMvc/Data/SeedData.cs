@@ -16,8 +16,7 @@ namespace CinemaMvc.Data
         private static readonly AdminSeed[] AdminAccounts =
         {
             new("daiadmin@admin.com", "20031018;", "Dai", "Admin", null),
-            new("daiadmin2@admin.com", "daizhongtian1.", "Dai", "Admin2", null),
-            new("daiadmin3@admin.com", "daizhongtian1.", "Dai", "Admin3", null)
+            new("daiadmin2@admin.com", "daizhongtian1.", "Dai", "Admin2", null)
         };
 
         public static async Task InitializeAsync(WebApplication app)

@@ -58,6 +58,10 @@ export default function Screenings() {
     }));
   }
 
+  function openDateTimePicker(event) {
+    event.currentTarget.showPicker?.();
+  }
+
   async function createScreening(event) {
     event.preventDefault();
 
@@ -164,6 +168,8 @@ export default function Screenings() {
                 type="datetime-local"
                 value={form.startTime}
                 onChange={updateForm}
+                onClick={openDateTimePicker}
+                onFocus={openDateTimePicker}
               />
             </div>
 
@@ -186,10 +192,10 @@ export default function Screenings() {
               </select>
             </div>
 
-            <div className="col-md-1">
+            <div className="col-md-auto">
               <button
                 type="submit"
-                className="btn btn-primary w-100"
+                className="btn btn-primary px-4"
                 disabled={isSaving}
               >
                 {isSaving ? "..." : "Create"}

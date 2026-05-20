@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { sendJson } from "../api/client";
 
-export default function Register() {
+export default function Register({ onRegistered }) {
   const [form, setForm] = useState({
     email: "",
     firstName: "",
@@ -32,6 +32,7 @@ export default function Register() {
       setMessage("");
 
       await sendJson("/api/account/register", "POST", form);
+      await onRegistered?.();
 
       setMessage("Account created. You are now signed in.");
       setForm({

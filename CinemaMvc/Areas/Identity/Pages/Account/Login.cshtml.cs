@@ -13,11 +13,16 @@ namespace CinemaMvc.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly IConfiguration _configuration;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(
+            SignInManager<ApplicationUser> signInManager,
+            ILogger<LoginModel> logger,
+            IConfiguration configuration)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _configuration = configuration;
         }
 
         [BindProperty]
@@ -35,7 +40,7 @@ namespace CinemaMvc.Areas.Identity.Pages.Account
                 ModelState.AddModelError(string.Empty, ErrorMessage);
             }
 
-            returnUrl ??= Url.Content("~/");
+            returnUrl ??= GetDefaultReturnUrl();
 
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
@@ -44,7 +49,7 @@ namespace CinemaMvc.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string? returnUrl = null)
         {
-            returnUrl ??= Url.Content("~/");
+            returnUrl ??= GetDefaultReturnUrl();
             ReturnUrl = returnUrl;
 
             if (!ModelState.IsValid)
@@ -61,7 +66,7 @@ namespace CinemaMvc.Areas.Identity.Pages.Account
             if (result.Succeeded)
             {
                 _logger.LogInformation("User logged in.");
-                return LocalRedirect(returnUrl);
+                return RedirectToSafeReturnUrl(returnUrl);
             }
 
             if (result.RequiresTwoFactor)
@@ -81,6 +86,35 @@ namespace CinemaMvc.Areas.Identity.Pages.Account
 
             ModelState.AddModelError(string.Empty, "Invalid login attempt.");
             return Page();
+        }
+
+        private string GetDefaultReturnUrl()
+        {
+            return _configuration["ClientApp:BaseUrl"] ?? Url.Content("~/");
+        }
+
+        private IActionResult RedirectToSafeReturnUrl(string returnUrl)
+        {
+            if (Url.IsLocalUrl(returnUrl))
+            {
+                return LocalRedirect(returnUrl);
+            }
+
+            var clientAppUrl = _configuration["ClientApp:BaseUrl"];
+            if (!string.IsNullOrWhiteSpace(clientAppUrl)
+                && Uri.TryCreate(clientAppUrl, UriKind.Absolute, out var configuredClientApp)
+                && Uri.TryCreate(returnUrl, UriKind.Absolute, out var requestedReturnUrl)
+                && Uri.Compare(
+                    configuredClientApp,
+                    requestedReturnUrl,
+                    UriComponents.SchemeAndServer,
+                    UriFormat.Unescaped,
+                    StringComparison.OrdinalIgnoreCase) == 0)
+            {
+                return Redirect(returnUrl);
+            }
+
+            return LocalRedirect(Url.Content("~/"));
         }
 
         public class InputModel

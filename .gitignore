@@ -1,5 +1,3 @@
-.verify-dotnet-home/
-.codex-temp/
 .dotnet/
 *.log
 
