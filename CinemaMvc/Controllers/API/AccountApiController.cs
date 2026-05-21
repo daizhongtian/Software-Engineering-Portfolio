@@ -50,12 +50,7 @@ public class AccountApiController : ControllerBase
 
         var roles = await _userManager.GetRolesAsync(user);
 
-        return new CurrentUserDto
-        {
-            IsAuthenticated = true,
-            Email = user.Email,
-            Roles = roles.ToArray()
-        };
+        return CreateCurrentUserDto(user, roles);
     }
 
     [HttpPost("register")]
@@ -114,12 +109,52 @@ public class AccountApiController : ControllerBase
 
         var roles = await _userManager.GetRolesAsync(user);
 
-        return new CurrentUserDto
+        return CreateCurrentUserDto(user, roles);
+    }
+
+    [HttpPost("login")]
+    [AllowAnonymous]
+    public async Task<ActionResult<CurrentUserDto>> Login(LoginDto dto)
+    {
+        if (string.IsNullOrWhiteSpace(dto.Email))
         {
-            IsAuthenticated = true,
-            Email = user.Email,
-            Roles = roles.ToArray()
-        };
+            return BadRequest("Email is required.");
+        }
+
+        if (string.IsNullOrWhiteSpace(dto.Password))
+        {
+            return BadRequest("Password is required.");
+        }
+
+        var user = await _userManager.FindByEmailAsync(dto.Email.Trim());
+        if (user == null)
+        {
+            return BadRequest("Invalid email or password.");
+        }
+
+        var result = await _signInManager.PasswordSignInAsync(
+            user,
+            dto.Password,
+            dto.RememberMe,
+            lockoutOnFailure: false);
+
+        if (result.Succeeded)
+        {
+            var roles = await _userManager.GetRolesAsync(user);
+            return CreateCurrentUserDto(user, roles);
+        }
+
+        if (result.IsLockedOut)
+        {
+            return BadRequest("User account is locked.");
+        }
+
+        if (result.RequiresTwoFactor)
+        {
+            return BadRequest("Two-factor authentication is not supported by this client.");
+        }
+
+        return BadRequest("Invalid email or password.");
     }
 
     [HttpPost("logout")]
@@ -128,5 +163,17 @@ public class AccountApiController : ControllerBase
     {
         await _signInManager.SignOutAsync();
         return NoContent();
+    }
+
+    private static CurrentUserDto CreateCurrentUserDto(
+        ApplicationUser user,
+        IEnumerable<string> roles)
+    {
+        return new CurrentUserDto
+        {
+            IsAuthenticated = true,
+            Email = user.Email,
+            Roles = roles.ToArray()
+        };
     }
 }

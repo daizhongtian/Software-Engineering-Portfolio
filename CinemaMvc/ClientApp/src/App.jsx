@@ -3,10 +3,9 @@ import Screenings from "./pages/Screenings";
 import ProfileEdit from "./pages/ProfileEdit";
 import AdminUsers from "./pages/AdminUsers";
 import Register from "./pages/Register";
+import Login from "./pages/Login";
 import { getJson, sendJson } from "./api/client";
 
-const identityBaseUrl = import.meta.env.DEV ? "http://localhost:5239" : "";
-const loginReturnUrl = encodeURIComponent(import.meta.env.DEV ? window.location.origin : "/");
 const anonymousUser = {
   isAuthenticated: false,
   email: null,
@@ -32,7 +31,13 @@ export default function App() {
   const authKeyRef = useRef(getAuthKey(anonymousUser));
 
   const isAdmin = currentUser.roles?.includes("Admin");
-  const visiblePage = page === "users" && !isAdmin ? "screenings" : page;
+  let visiblePage = page;
+  if (visiblePage === "users" && !isAdmin) {
+    visiblePage = "screenings";
+  }
+  if ((visiblePage === "login" || visiblePage === "register") && currentUser.isAuthenticated) {
+    visiblePage = "screenings";
+  }
 
   const applyCurrentUser = useCallback((nextUser) => {
     const nextAuthKey = getAuthKey(nextUser);
@@ -47,6 +52,16 @@ export default function App() {
   const refreshCurrentUser = useCallback(async () => {
     applyCurrentUser(await loadCurrentUser());
   }, [applyCurrentUser]);
+
+  const finishAuthentication = useCallback(async (nextUser) => {
+    if (nextUser) {
+      applyCurrentUser(nextUser);
+    } else {
+      await refreshCurrentUser();
+    }
+
+    setPage("screenings");
+  }, [applyCurrentUser, refreshCurrentUser]);
 
   async function logout() {
     await sendJson("/api/account/logout", "POST");
@@ -120,12 +135,13 @@ export default function App() {
             )}
 
             {!currentUser.isAuthenticated && (
-              <a
-                className="nav-link"
-                href={`${identityBaseUrl}/Identity/Account/Login?returnUrl=${loginReturnUrl}`}
+              <button
+                type="button"
+                className="nav-link btn btn-link"
+                onClick={() => setPage("login")}
               >
                 Login
-              </a>
+              </button>
             )}
 
             {currentUser.isAuthenticated && (
@@ -150,7 +166,12 @@ export default function App() {
       {visiblePage === "screenings" && <Screenings key={`screenings-${authVersion}`} />}
       {visiblePage === "profile" && <ProfileEdit key={`profile-${authVersion}`} />}
       {visiblePage === "users" && isAdmin && <AdminUsers key={`users-${authVersion}`} />}
-      {visiblePage === "register" && <Register onRegistered={refreshCurrentUser} />}
+      {visiblePage === "register" && !currentUser.isAuthenticated && (
+        <Register onRegistered={finishAuthentication} />
+      )}
+      {visiblePage === "login" && !currentUser.isAuthenticated && (
+        <Login onLoggedIn={finishAuthentication} />
+      )}
     </>
   );
 }

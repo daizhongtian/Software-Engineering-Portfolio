@@ -31,8 +31,8 @@ export default function Register({ onRegistered }) {
       setError("");
       setMessage("");
 
-      await sendJson("/api/account/register", "POST", form);
-      await onRegistered?.();
+      const currentUser = await sendJson("/api/account/register", "POST", form);
+      await onRegistered?.(currentUser);
 
       setMessage("Account created. You are now signed in.");
       setForm({

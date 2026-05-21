@@ -19,6 +19,10 @@ namespace CinemaMvc.Data
         {
             base.OnModelCreating(builder);
 
+            builder.Entity<ApplicationUser>()
+                .Property(u => u.ConcurrencyStamp)
+                .IsConcurrencyToken();
+
             builder.Entity<Reservation>()
                 .HasOne(r => r.Screening)
                 .WithMany(s => s.Reservations)

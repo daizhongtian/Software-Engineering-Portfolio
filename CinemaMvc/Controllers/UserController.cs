@@ -79,6 +79,11 @@ namespace CinemaMvc.Controllers
                 return BadRequest("Last name is required.");
             }
 
+            if (string.IsNullOrWhiteSpace(dto.ConcurrencyStamp))
+            {
+                return BadRequest("Concurrency stamp is required.");
+            }
+
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
             if (user == null)
             {
