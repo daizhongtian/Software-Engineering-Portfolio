@@ -67,8 +67,10 @@ else
 }
 
 app.UseHttpsRedirection();
-app.UseRouting();
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
+app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -80,6 +82,8 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
+
+app.MapFallbackToFile("index.html");
 
 await SeedData.InitializeAsync(app);
 
