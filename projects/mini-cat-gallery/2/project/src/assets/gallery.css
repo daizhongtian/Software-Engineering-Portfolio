@@ -1,0 +1,27 @@
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #fafafa;
+  text-align: center;
+}
+
+h1 {
+  margin: 20px 0 10px;
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  background: #4caf50;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background .2s;
+}
+
+button:hover { background: #45a049; }
+button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
