@@ -1,0 +1,107 @@
+#include "team.h"
+#include <algorithm>
+#include <sstream>
+
+using namespace std;
+
+
+// Constructor to initialize a Team object with sport type, coach, and ID
+// Throws an exception if sport type is empty, coach is null, or ID is negative
+Team::Team(const std::string& sport_type, Coach* coach, int id)
+    : sport_type(sport_type), coach(coach), id(id) {
+    if (sport_type.empty()) {
+        throw std::invalid_argument("Sport type cannot be empty");
+    }
+    if (id < 0) {
+        throw std::invalid_argument("Team ID cannot be negative");
+    }
+}
+
+// Method to add a member to the team
+void Team::addMember(Member* member) {
+    members.push_back(member);
+}
+
+// Method to remove a member from the team
+void Team::removeMember(Member* member) {
+    members.erase(
+        std::remove(members.begin(), members.end(), member),
+        members.end()
+    );
+}
+
+// Method to set the coach of the team
+void Team::setCoach(Coach* coach) {
+    this->coach = coach;
+}
+
+// Getter for the sport type of the team
+std::string Team::getSportType() const {
+    return sport_type;
+}
+
+// Getter for the members of the team
+std::vector<Member*> Team::getMembers() const {
+    return members;
+}
+
+// Getter for the coach of the team
+Coach* Team::getCoach() const {
+    return coach;
+}
+
+// Getter for the ID of the team
+int Team::getId() const {
+    return id;
+}
+
+// Method to remove the coach from the team
+void Team::removeCoach() {
+    coach = nullptr;
+}
+
+// Equality operator to compare two teams
+bool Team::operator==(const Team& other) const {
+    return sport_type == other.sport_type && coach == other.coach && members == other.members;
+}
+
+// Operator to combine two teams
+Team Team::operator+(const Team& other) const {
+    Team combined_team(sport_type, coach, id);
+    combined_team.members = members;
+    combined_team.members.insert(combined_team.members.end(), other.members.begin(), other.members.end());
+    return combined_team;
+}
+
+// Method to get the count of members in the team
+size_t Team::getMemberCount() const {
+    return members.size();
+}
+
+const std::string& Team::getName() const {
+    return sport_type;
+}
+
+
+std::string Team::toCsv() const
+{
+    std::ostringstream oss;
+    // id,sportType,coachId,memberId1;memberId2;...
+    oss << id << ',' << sport_type << ',';
+
+    // coach 可能为空！
+    if (coach)
+        oss << coach->getId();
+    else
+        oss << -1;              // 约定 -1 代表无教练
+
+    oss << ',';
+
+    for (size_t i = 0; i < members.size(); ++i)
+    {
+        oss << members[i]->getId();
+        if (i + 1 < members.size())
+            oss << ';';
+    }
+    return oss.str();
+}
