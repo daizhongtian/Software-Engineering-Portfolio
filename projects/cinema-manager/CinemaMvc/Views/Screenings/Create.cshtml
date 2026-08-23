@@ -1,0 +1,33 @@
+@model CinemaMvc.Models.Screening
+
+@{
+     ViewData["Title"] = "Create Screening";
+}
+
+<h2>Create Screening</h2>
+<form asp-action="Create"method = "post">
+     <div class="mb-3">
+        <label asp-for="FilmTitle" class="form-label"></label>
+        <input asp-for="FilmTitle" class="form-control" />
+        <span asp-validation-for="FilmTitle" class="text-danger"></span>
+    </div>
+     <div class="mb-3">
+        <label asp-for="StartTime" class="form-label"></label>
+        <input asp-for="StartTime" class="form-control" type="datetime-local" />
+        <span asp-validation-for="StartTime" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="CinemaId" class="form-label"></label>
+        <select asp-for="CinemaId" asp-items="ViewBag.CinemaId" class="form-select"></select>
+        <span asp-validation-for="CinemaId" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+    <a asp-action="Index" class="btn btn-secondary">Back</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

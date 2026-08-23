@@ -1,0 +1,86 @@
+@using System.Security.Permissions
+@model CinemaMvc.ViewModels.ScreeningSeatsViewModel
+
+@{
+    ViewData["Title"]="Seats";
+
+}
+<h2> @Model.FilmTitle</h2>
+<p>
+    <strong>Cinema:</strong> @Model.CinemaName <br />
+    <strong>Time:</strong> @Model.StartTime
+</p>
+
+@if(TempData["Success"]!=null)
+{
+    <div class ="alert alert-success">@TempData["Success"] </div>
+
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<table class ="table-bordered text-centre align-middle">
+    <thead>
+        <tr>
+            <th> Row \seat </th>
+            @for(int seat=1;seat<=Model.SeatsPerRow;seat++)
+            {
+                <th>@seat</th>  
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @for (int row = 1; row <= Model.Rows; row++)
+        {
+            <tr>
+                <th>@row</th>
+                @for (int seat = 1; seat <= Model.SeatsPerRow; seat++)
+                {
+                    var key = $"{row}_{seat}";
+                    <td>
+                        @if (Model.MySeats.Contains(key))
+                        {
+                            <form asp-action="Cancel" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="screeningId" value="@Model.ScreeningId" />
+                                <input type="hidden" name="rowNumber" value="@row" />
+                                <input type="hidden" name="seatNumber" value="@seat" />
+                                <button type="submit" class="btn btn-warning btn-sm w-100">
+                                    My seat
+                                </button>
+                            </form>
+                        }
+                        else if (Model.ReservedSeats.Contains(key))
+                        {
+                            <button type="button" class="btn btn-danger btn-sm w-100" disabled>
+                                Busy
+                            </button>
+                        }
+                        else
+                        {
+                            <form asp-action="Reserve" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="screeningId" value="@Model.ScreeningId" />
+                                <input type="hidden" name="rowNumber" value="@row" />
+                                <input type="hidden" name="seatNumber" value="@seat" />
+                                <button type="submit" class="btn btn-success btn-sm w-100">
+                                    Free
+                                </button>
+                            </form>
+                        }
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+
+</table>
+
+<div class="mt-3">
+    <span class="badge bg-success">Free</span>
+    <span class="badge bg-danger">Busy</span>
+    <span class="badge bg-warning text-dark">My seat</span>
+</div>
