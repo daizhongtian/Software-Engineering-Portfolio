@@ -8,7 +8,7 @@
 - Implemented a template-based CSV persistence layer of approximately 200 lines to automatically load and save entities at application startup and shutdown.
 - Wrote GoogleTest unit tests and achieved more than 90% coverage across authentication and core workflows, including edge-case file I/O.
 
-[View project in this portfolio](./projects/sports-club-cli/) | [View original repository](https://github.com/daizhongtian/sports_club-CLI-)
+[View project in this portfolio](https://github.com/daizhongtian/Software-Engineering-Portfolio/tree/main/projects/sports-club-cli) | [View original repository](https://github.com/daizhongtian/sports_club-CLI-)
 
 ## Penguin Chess (CLI Game)
 
@@ -19,7 +19,7 @@
 - Built save and load functionality using file I/O to persist player nicknames and scores, enabling session restoration.
 - Implemented ANSI escape-code rendering for colored tiles and pieces to improve the terminal user experience.
 
-[View project in this portfolio](./projects/penguin-game/) | [View original repository](https://github.com/daizhongtian/penguin-game-)
+[View project in this portfolio](https://github.com/daizhongtian/Software-Engineering-Portfolio/tree/main/projects/penguin-game) | [View original repository](https://github.com/daizhongtian/penguin-game-)
 
 ## Numerical Methods
 
@@ -29,7 +29,7 @@
 - Compared Fourier-series reconstruction strategies for impulsive inputs and analysed approximation error.
 - Extended the Lotka-Volterra model with quadratic density terms; solved the resulting ODEs with `ode45`, Gear2, and RK4 and compared accuracy against runtime.
 
-[View project in this portfolio](./projects/numerical-methods/) | [View original repository](https://github.com/daizhongtian/numerical-method-)
+[View project in this portfolio](https://github.com/daizhongtian/Software-Engineering-Portfolio/tree/main/projects/numerical-methods) | [View original repository](https://github.com/daizhongtian/numerical-method-)
 
 ## SmartCare Solutions
 
@@ -40,7 +40,7 @@
 - Used JPA with MySQL and MongoDB for data persistence and retrieval.
 - Integrated application modules and tested core workflows in a layered backend architecture.
 
-[View project in this portfolio](./projects/smartcare-solutions/) | [View original repository](https://github.com/daizhongtian/SmartCare-Solutions)
+[View project in this portfolio](https://github.com/daizhongtian/Software-Engineering-Portfolio/tree/main/projects/smartcare-solutions) | [View original repository](https://github.com/daizhongtian/SmartCare-Solutions)
 
 ## Cinema Manager
 
@@ -51,7 +51,7 @@
 - Used Entity Framework migrations with SQLite to model and persist users, cinemas, screenings, and reservations.
 - Added server-side validation and role-specific management functionality.
 
-[View project in this portfolio](./projects/cinema-manager/) | [View original repository](https://github.com/daizhongtian/cinema-manager)
+[View project in this portfolio](https://github.com/daizhongtian/Software-Engineering-Portfolio/tree/main/projects/cinema-manager) | [View original repository](https://github.com/daizhongtian/cinema-manager)
 
 ## Mini Cat Gallery
 
@@ -62,7 +62,7 @@
 - Structured the frontend with reusable Vue components and a dedicated API service written in TypeScript.
 - Used CSS Grid to support responsive layouts across different screen sizes.
 
-[View project in this portfolio](./projects/mini-cat-gallery/) | [View original repository](https://github.com/daizhongtian/Mini-Cat-Gallery)
+[View project in this portfolio](https://github.com/daizhongtian/Software-Engineering-Portfolio/tree/main/projects/mini-cat-gallery) | [View original repository](https://github.com/daizhongtian/Mini-Cat-Gallery)
 
 ## Library Management
 
@@ -72,6 +72,6 @@
 - Applied object-oriented programming concepts by separating book data from library-management logic.
 - Used the project to practise Java classes, methods, collections, and program flow.
 
-[View project in this portfolio](./projects/library-management/) | [View original repository](https://github.com/daizhongtian/library-management-)
+[View project in this portfolio](https://github.com/daizhongtian/Software-Engineering-Portfolio/tree/main/projects/library-management) | [View original repository](https://github.com/daizhongtian/library-management-)
 
 
