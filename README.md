@@ -16,6 +16,8 @@ This repository is my consolidated software engineering portfolio. Each project 
 
 **Tech:** C, `malloc`/`free`, File I/O, ANSI escape codes
 
+**Collaborator:** [Vladyslav Zelenkov](https://github.com/VladyslavZelenkov)
+
 - Co-defined the game rules and modular architecture across the user interface, core logic, and persistence modules, and produced design documentation.
 - Implemented dynamic memory management for board and player structures and ensured there were no memory leaks across repeated sessions.
 - Built save and load functionality using file I/O to persist player nicknames and scores, enabling session restoration.
