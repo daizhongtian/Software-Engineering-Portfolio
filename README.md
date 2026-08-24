@@ -46,6 +46,10 @@ This repository is my consolidated software engineering portfolio. Each project 
 
 ## Cinema Manager
 
+The cinema ticket management system is preserved in two versions, showing its evolution from a server-rendered ASP.NET MVC application to a React frontend backed by ASP.NET Core REST APIs.
+
+### ASP.NET MVC Version
+
 **Tech:** C#, ASP.NET MVC, Entity Framework, SQLite, Bootstrap
 
 - Built a cinema ticket management web application with user registration, authentication, and profile management.
@@ -53,7 +57,18 @@ This repository is my consolidated software engineering portfolio. Each project 
 - Used Entity Framework migrations with SQLite to model and persist users, cinemas, screenings, and reservations.
 - Added server-side validation and role-specific management functionality.
 
-[View project](https://github.com/daizhongtian/Software-Engineering-Portfolio/tree/main/projects/cinema-manager)
+[View ASP.NET MVC version](https://github.com/daizhongtian/Software-Engineering-Portfolio/tree/main/projects/cinema-manager/aspnet-mvc)
+
+### React Version
+
+**Tech:** React, Vite, JavaScript, ASP.NET Core REST APIs, Identity, Entity Framework, SQLite
+
+- Rebuilt the user interface as a React single-page application with dedicated pages for authentication, profiles, screenings, reservations, and user administration.
+- Added REST API controllers and DTOs for accounts, cinemas, screenings, reservations, and administrative user management.
+- Integrated ASP.NET Core Identity authentication and role-based authorization, including API-specific `401 Unauthorized` and `403 Forbidden` responses.
+- Configured Vite for frontend development and production builds served through the ASP.NET Core application.
+
+[View React version](https://github.com/daizhongtian/Software-Engineering-Portfolio/tree/main/projects/cinema-manager/react)
 
 ## Mini Cat Gallery
 
