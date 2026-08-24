@@ -1,0 +1,10 @@
+.dotnet/
+*.log
+
+CinemaMvc/bin/
+CinemaMvc/obj/
+CinemaMvc/.keys/
+CinemaMvc/app.db
+CinemaMvc/app.db-shm
+CinemaMvc/app.db-wal
+publish/
